@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import styles from './Search.module.css';
 import { useDebounce } from '../../hooks';
@@ -6,14 +7,16 @@ import { setSearchValue, setDebouncedSearch } from '../../actions';
 
 export const Search = () => {
 	const dispatch = useDispatch();
-	// const [searchValue, setSearchValue] = useState('');
 	const searchValue = useSelector(selectSearchValue);
+	const debouncedSearchValue = useDebounce(searchValue);
 
 	const searchHandle = (input) => {
 		dispatch(setSearchValue(input));
 	};
 
-	dispatch(setDebouncedSearch(useDebounce(searchValue)));
+	useEffect(() => {
+		dispatch(setDebouncedSearch(debouncedSearchValue));
+	}, [debouncedSearchValue, dispatch]);
 
 	return (
 		<input
